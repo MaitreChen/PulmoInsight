@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Image</title>
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        header {
+            background-color: #2c3e50;
+            padding: 20px;
+            color: white;
+            text-align: center;
+        }
+
+        nav {
+            background-color: #34495e;
+            padding: 10px;
+            text-align: center;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        .doctor-home-container {
+            text-align: center;
+        }
+
+        .doctor-home-form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .doctor-home-form input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        .doctor-home-form button {
+            background-color: #3498db;
+            color: white;
+            padding: 10px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        /* 返回按钮样式 */
+        .back-button {
+            display: block;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e74c3c;
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .user-info {
+            float: right;
+            margin-right: 20px;
+            margin-top: auto;
+        }
+
+        .logout-btn {
+            float: right;
+            margin-right: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Welcome To PulmoInsight!</h1>
+</header>
+
+<nav>
+    <a href="#"></a>
+    <!-- Add other navigation links as needed -->
+
+    <!-- Display user information and logout button -->
+    <div class="user-info">
+        {% if user.is_authenticated %}
+            <div class="dropdown" style="margin-left: -10px;">
+                <button onclick="toggleDropdown()">{{ user.username }}</button>
+                <div id="dropdownMenu" class="dropdown-menu">
+                    <a href="{% url 'doctor_profile' %}">Profile</a>
+                    <a href="{% url 'diagnosis_records' %}">Diagnosis Records</a>
+                    <a href="{% url 'index' %}">Logout</a>
+                    <!-- 其他菜单项 -->
+                </div>
+            </div>
+        {% else %}
+            <!-- 未登录时显示的内容 -->
+        {% endif %}
+
+    </div>
+</nav>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Analyse</button>
+</form>
+
+{% if latest_image %}
+    <img src="{{ latest_image.image.url }}" alt="Latest Uploaded Image">
+
+    {% if inference_result %}
+        <h4>推理结果</h4>
+        <p id="inferenceResult">{{ inference_result }}</p>
+        <!-- 添加下面这行显示推理时间 -->
+        <h4>推理时间</h4>
+        <p id="inferenceTime">{{ inference_time|floatformat:2 }}ms</p>
+    {% endif %}
+{% else %}
+    <p>No image uploaded yet.</p>
+{% endif %}
+
+
+<style>
+    .dropdown-menu {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        z-index: 1;
+        left: 90%;
+    }
+
+    .dropdown-menu a {
+        padding: 12px;
+        text-decoration: none;
+        display: block;
+        color: #333;
+    }
+
+    .dropdown:hover .dropdown-menu {
+        display: block;
+    }
+</style>
+
+<script>
+    // Your JavaScript code here
+    function toggleDropdown() {
+        var dropdownMenu = document.getElementById("dropdownMenu");
+        dropdownMenu.style.display = (dropdownMenu.style.display === "block") ? "none" : "block";
+    }
+</script>
+</body>
+</html>

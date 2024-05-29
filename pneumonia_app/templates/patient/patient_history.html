@@ -1,0 +1,133 @@
+{% extends 'patient/base.html' %}
+
+
+{% block title %}History{% endblock %}
+
+{% block content %}
+
+    <body>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Number</th>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Gender</th>
+            <th>Marital Status</th>
+            <th>Image Name</th>
+            <th>Upload Time</th>
+            <th>Diagnosis Status</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for record in patient_basic_records %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ record.get_patient_name }}</td>
+                <td>{{ record.get_patient_age }}</td>
+                <td>{{ record.get_patient_gender }}</td>
+                <td>{{ record.get_patient_marital_status }}</td>
+                <td>{{ record.get_patient_medical_image_name }}</td>
+                <td>{{ record.upload_time|date:"Y-n-j H:i" }}</td>
+                <td>{% if patient_diagnosis_status %}
+                    {{ patient_diagnosis_status }}{% else %}
+                    No{% endif %}</td>
+                </td>
+                <td>
+                    <a href="{% url 'download_image' filename=record.get_patient_medical_image_name %}" download >Download</a>
+                    <a href="{% url 'detailed_info' %}">View</a>
+                    <button onclick="deleteRecord('{{ record.id }}')">Delete</button>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </body>
+
+    <script>
+        function deleteRecord(recordId) {
+            // 向后端发送删除请求
+            fetch(`/delete_record/${recordId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'  // 通过 Django 获取 CSRF 令牌
+                },
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // 处理删除成功的情况，例如刷新页面或更新表格
+                    console.log('Record deleted successfully');
+                    location.reload();  // 刷新页面，或者通过其他方式更新表格
+                })
+                .catch(error => {
+                    console.error('Error deleting record:', error);
+                });
+        }
+    </script>
+
+    <style>
+        table {
+            border-collapse: collapse;
+            margin: auto;
+            width: 100%;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid rgba(128, 128, 128, 0.5); /* 灰色并且有透明度 */
+            font-weight: normal; /* 设置为 normal，即正常字体粗细 */
+        }
+
+        /* 奇数行背景颜色 */
+        tbody tr:nth-child(odd) {
+            background-color: #444; /* 奇数行背景颜色 */
+        }
+
+        /* 偶数行背景颜色 */
+        tbody tr:nth-child(even) {
+            background-color: #555; /* 偶数行背景颜色 */
+        }
+
+        /* 鼠标悬停时的背景颜色 */
+        tbody tr:hover {
+            background-color: #666; /* 悬停时的背景颜色 */
+        }
+
+        /* 字段值文字颜色 */
+        td {
+            color: #fff; /* 字段值文字颜色 */
+        }
+
+    </style>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        {#background-color: black;#} color: #fff; /* 文字颜色为纯白色 */
+        }
+
+        /* 保留原有样式，根据需要进行微调 */
+        .history-section {
+            flex: 1;
+            background-color: #003366; /* 左侧区域的背景颜色，深蓝色 */
+            padding: 20px;
+            border-radius: 5px;
+            margin-left: 10px; /* 调整与左侧区域的间距 */
+            margin-right: 10px; /* 调整与右侧区域的间距 */
+        }
+
+        .history-item {
+            color: white;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #d9534f; /* 红色历史记录条目 */
+            border-radius: 3px;
+        }
+    </style>
+
+{% endblock %}

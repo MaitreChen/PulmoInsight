@@ -1,0 +1,98 @@
+{% extends 'doctor/base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    <body>
+    <div class="main-container">
+
+        <div class="content-container">
+            <div class="welcome custom-font">
+                <h2>Dear Dr. {{ user.username }}.<br>
+                    Welcome to PulmoInsight!
+                </h2>
+                <p>Let's heal the world from here!<br>
+                    Your care makes a difference!</p>
+            </div>
+
+            <div class="notifications">
+                <!-- Display unread notifications here -->
+                <div class="notification-box">
+                    <strong>Notification</strong>
+                    {% if num_patients != 0 %}
+                        <p>You have {{ num_patients }} patients awaiting your diagnosis!<br>
+                            Please enter Record Page to review their <br>medical histories for diagnosis!
+                        </p>
+                    {% else %}
+                        <p>Currently, there are no patients awaiting your diagnosis! </p>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+    </body>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: black;
+            color: #fff; /* 文字颜色为纯白色 */
+        }
+
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            margin: 10px; /* 边距，根据实际情况调整 */
+            height: 100%;
+        }
+
+
+        .content-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px; /* 顶部边距，根据实际情况调整 */
+            height: 100%;
+            margin-bottom: 10px;
+        }
+
+        .welcome {
+            flex: 1;
+            background-color: #003366; /* 左侧区域的背景颜色，深蓝色 */
+            padding: 80px;
+            border-radius: 5px;
+        }
+
+        .custom-font {
+            color: white;
+            font-size: 30px;
+            font-weight: bolder;
+        }
+
+
+        .notifications {
+            font-size: 25px;
+            flex: 1;
+            text-align: center;
+            background-color: #d9534f; /* 右侧区域的背景颜色，红色 */
+            padding: 80px;
+            border-radius: 10px;
+        }
+
+        .notification-box {
+            color: #721c24;
+            {#background-color: #0b2e13;#}
+            width: 110%;
+            position: relative;
+            left: -20px;
+            top: -30px;
+        }
+    </style>
+
+{% endblock %}

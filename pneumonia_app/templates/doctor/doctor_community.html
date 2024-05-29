@@ -1,0 +1,111 @@
+{% extends 'doctor/base.html' %}
+
+{% block title %}Community{% endblock %}
+
+{% block content %}
+    <h1>Welcome to Community!</h1>
+
+    <!-- Form to Post a New Message -->
+    <div class="center-container">
+        <form method="post" action="{% url 'doctor_community' %}">
+            {% csrf_token %}
+            {{ post_form.as_p }}
+            <button type="submit">Post</button>
+        </form>
+    </div>
+
+    <div class="center-container">
+        <div class="post-container-wrapper">
+            {% for post in posts %}
+                <div class="post-container">
+                    <p><span class="post-info"
+                             style="color: rgba(255, 255, 255, 0.4); ">{{ post.doctor.name }} - {{ doctor.created_at|date:"Y-m-d H:i" }}</span>
+                    </p>
+                    <p>{{ post.content }}</p>
+                    <a href="{% url 'view_doctor_comments' post.id %}" class="view-comments-button">View Comments</a>
+
+                    <!-- 添加删除按钮 -->
+                        <form method="post" action="{% url 'delete_doctor_post' post.id %}"
+                              onsubmit="return confirm('Are you sure you want to delete this post?');"
+                              onclick="saveScrollPosition()">
+                            {% csrf_token %}
+                            <button type="submit" onclick="submitComment()" class="delete-button">Delete</button>
+                        </form>
+
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        // 定义 JavaScript 函数
+        function submitComment() {
+            var commentForm = document.getElementById('commentForm');
+
+            // 执行其他逻辑，比如使用 Ajax 发送异步请求
+
+            // 阻止默认的表单提交行为
+            commentForm.submit();
+        }
+    </script>
+
+    <style>
+        body {
+            color: white;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .center-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px; /* Add some margin at the bottom for spacing */
+        }
+
+        form {
+            display: flex;
+            flex-direction: column; /* 设置为纵向布局 */
+            align-items: center;
+            width: 300px; /* 设置表单宽度 */
+            margin-top: 20px; /* 为表单顶部添加一些间距 */
+        }
+
+        .post-container-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .post-container {
+            width: 800px; /* 设置固定宽度 */
+            height: 300px; /* Allow the height to adjust based on content */
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            overflow: hidden; /* 防止内容溢出 */
+            position: relative;
+        }
+
+        .view-comments-button {
+            margin-right: 80px; /* 调整查看评论按钮的右边距 */
+            color: #3498db; /* 设置 View Comments 链接的颜色 */
+        }
+
+        .view-comments-button:visited {
+            color: #3498db; /* 设置 View Comments 链接被访问后的颜色，与默认颜色相同 */
+        }
+
+        .delete-button, .view-comments-button {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+        }
+    </style>
+
+
+
+{% endblock %}

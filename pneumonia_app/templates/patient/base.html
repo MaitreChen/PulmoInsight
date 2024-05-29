@@ -1,0 +1,237 @@
+<!-- base.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}PulmoInsight{% endblock %}</title>
+
+ <!-- 引入 Bootstrap 样式表 -->
+    <link href="{% static 'css/bootstrap.min.css' %}">
+
+    <style>
+        body {
+            background-color: rgba(0, 0, 0, 0.9);
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        {#导航栏#}
+        .nav1 {
+            background-color: #000;
+            padding: 10px;
+            text-align: center;
+            height: 50px;
+            position: relative;
+            border-bottom: 1px solid rgba(128, 128, 128, 0.5); /* 灰色并且有透明度 */
+        }
+
+        .user-info {
+            float: right;
+            margin-right: 30px;
+            top: 10px;
+            position: relative;
+            display: inline-block;
+            margin-left: -10px;
+        }
+
+
+        {#导航栏logo#}
+        .nav1 img {
+            height: 55px; /* 根据需要设置 logo 的高度 */
+            right: 240px; /* 调整右侧位置 */
+            display: inline-block;
+            position: relative;
+        }
+
+        /*导航栏系统名称*/
+        .nav1 label {
+            color: white;
+            text-decoration: none;
+            position: relative;
+            right: 240px;
+            top: -20px; /* 调整垂直位置，可以根据需要进行调整 */
+            font-weight: bold;
+        }
+
+        /* 导航栏链接样式 */
+        .nav1-link {
+            color: white; /* 设置文本颜色为白色 */
+            text-decoration: none;
+            padding: 10px;
+            margin: 0 20px;
+            right: 100px;
+            position: relative;
+            top: -20px; /* 调整垂直位置，可以根据需要进行调整 */
+        }
+        {##}
+        {#/* 网页主体部分的容器 */#}
+        {#.container {#}
+        {#    max-width: 800px;#}
+        {#    min-height: 470px;#}
+        {#    margin: 20px auto;#}
+        {#    padding: 20px;#}
+        {#    background-color: black;#}
+        {#    box-shadow: 0 0 10px rgba(0, 0, 0, 0.9);#}
+        {#    border: 1px solid red; /* 添加边框进行调试 */#}
+        {#}#}
+
+        .nav1-link.active {
+            color: #003366; /* 深蓝色 */
+            background-color: yellow;
+        }
+
+
+    </style>
+</head>
+<body>
+
+<nav class="nav1">
+    <img src="{% static 'logo.png' %}" alt="PulmoInsight Logo">
+    <label for="PulmoInsight">PulmoInsight</label>
+
+    <!-- Home 页面链接 -->
+    <a href="{% url 'patient_home' %}" class="nav1-link main-link {% if current_page == 'home' %}active{% endif %}"
+       id="home-link">Home</a>
+
+    <!-- Upload 页面链接 -->
+    <a href="{% url 'patient_upload' %}" class="nav1-link main-link {% if current_page == 'upload' %}active{% endif %}"
+       id="upload-link">Upload</a>
+
+    <!-- History 页面链接 -->
+    <a href="{% url 'patient_history' %}"
+       class="nav1-link main-link {% if current_page == 'history' %}active{% endif %}" id="history-link">History</a>
+
+    <!-- Community 页面链接 -->
+    <a href="{% url 'patient_community' %}"
+       class="nav1-link main-link {% if current_page == 'community' %}active{% endif %}"
+       id="community-link">Community</a>
+
+    <!-- Help 页面链接 -->
+    <a href="{% url 'patient_help' %}" class="nav1-link main-link {% if current_page == 'help' %}active{% endif %}"
+       id="help-link">Help</a>
+
+    <!-- Display user information and logout button -->
+    <div class="user-info">
+        {% if user.is_authenticated %}
+            <div class="dropdown" style="margin-left: -10px;">
+                <button onclick="toggleDropdown()">{{ user.username }}</button>
+                <div id="dropdownMenu" class="dropdown-menu">
+                    <a href="{% url 'patient_profile' %}">Profile</a>
+                    <a href="{% url 'index' %}">Logout</a>
+                    <!-- 其他菜单项 -->
+                </div>
+            </div>
+        {% else %}
+            <!-- 未登录时显示的内容 -->
+        {% endif %}
+    </div>
+</nav>
+
+<style>
+    .user-info {
+        float: right;
+        margin-right: 30px;
+        top: 10px;
+        position: relative;
+        display: inline-block;
+        margin-left: -10px;
+    }
+
+    .dropdown {
+        display: inline-block;
+    }
+
+    .dropdown button {
+        background-color: black;
+        color: white;
+        padding: 10px;
+        border: none;
+        cursor: pointer;
+    }
+
+    .dropdown-menu {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+        min-width: 160px;
+        right: 0;
+    }
+
+    .dropdown-menu a {
+        color: #333;
+        padding: 12px;
+        text-decoration: none;
+        display: block;
+    }
+
+    .dropdown-menu a:hover {
+        background-color: #ddd;
+    }
+
+
+</style>
+
+
+<script>
+    // Your JavaScript code here
+    function toggleDropdown() {
+        var dropdownMenu = document.getElementById("dropdownMenu");
+        dropdownMenu.style.display = (dropdownMenu.style.display === "block") ? "none" : "block";
+    }
+
+    // 获取按钮和下拉菜单的元素
+    var userButton = document.getElementById("userButton");
+    var dropdownMenu = document.getElementById("dropdownMenu");
+
+    // 添加点击事件监听器
+    document.addEventListener("click", function (event) {
+        var isClickInside = userButton.contains(event.target);
+
+        // 如果点击事件不在按钮和下拉菜单内，则隐藏下拉菜单
+        if (!isClickInside) {
+            dropdownMenu.style.display = 'none';
+        }
+    });
+
+</script>
+
+<!-- 在页面底部引入 jQuery -->
+<script src="{% static 'jquery-3.x.x.min.js' %}"></script>
+
+<!-- 在页面底部添加用于异步加载的脚本 -->
+<script>
+    $(document).ready(function () {
+        // 给导航栏链接添加点击事件
+        $(".main-link").click(function (event) {
+            event.preventDefault();  // 阻止默认行为，即不进行常规的页面跳转
+
+            // 获取点击链接的 href 属性
+            var url = $(this).attr('href');
+
+            // 发送异步请求获取页面内容
+            $.get(url, function (data) {
+                // 将返回的内容更新到页面的特定区域，例如一个 <div id="content"></div>
+                $("#content").html(data);
+            });
+        });
+    });
+</script>
+
+
+<!-- 页面内容区域 -->
+<div id="content">
+    {% block content %}{% endblock %}
+</div>
+
+</body>
+</html>
+
+
+
+

@@ -1,0 +1,58 @@
+<!-- templates/upload.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Django 拖拽上传</title>
+    <style>
+        #drop-area {
+            width: 100%;
+            height: 200px;
+            border: 2px dashed #ccc;
+            text-align: center;
+            line-height: 200px;
+            font-size: 18px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+
+<div id="drop-area" ondrop="handleDrop(event)" ondragover="handleDragOver(event)">
+    将文件拖拽到此处上传
+</div>
+
+<script>
+    function handleDrop(event) {
+        event.preventDefault();
+
+        var files = event.dataTransfer.files;
+        var formData = new FormData();
+
+        for (var i = 0; i < files.length; i++) {
+            formData.append('file', files[i]);
+        }
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/upload/', true);
+
+        xhr.onload = function() {
+            if (xhr.status == 200) {
+                alert('文件上传成功！');
+            } else {
+                alert('文件上传失败，请重试。');
+            }
+        };
+
+        xhr.send(formData);
+    }
+
+    function handleDragOver(event) {
+        event.preventDefault();
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,227 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PulmoInsight - Login</title>
+    <style>
+        /* 样式部分可以根据你的设计需求进一步调整 */
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #333;
+        }
+
+
+        nav {
+            background-color: #000;
+            padding: 10px;
+            text-align: center;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        /* 登录页面特定样式 */
+        .login-container {
+            text-align: center;
+
+        }
+
+        .login-form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .login-form input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        .login-form button {
+            background-color: #3498db;
+            color: white;
+            padding: 10px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        /* 返回按钮样式 */
+        .back-button {
+            display: block;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e74c3c;
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        {#导航栏logo#}
+        nav img {
+            height: 100px; /* 根据需要设置 logo 的高度 */
+            margin-right: auto; /* 可调整 logo 与其他导航元素的间距 */
+            position: relative;
+        }
+
+        h2 {
+            color: white;
+            margin-top: auto;
+        }
+
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="{% url 'index' %}">
+        <img src="{% static 'logo.png' %}" alt="PulmoInsight Logo">
+    </a>
+</nav>
+
+<div class="container login-container">
+    <h2>Sign in to PulmoInsight</h2>
+    <div class="login-form">
+        <!-- 你的登录表单代码 -->
+        <form method="post">
+            {% csrf_token %}
+
+            <!-- 使用 Flex 布局水平排列表单项 -->
+            <div class="form-row">
+                <label for="username">Username</label>
+                <input type="text" name="username" required>
+            </div>
+
+            <div class="form-row">
+                <div class="left-right-margin">
+                    <label for="password">Password </label>
+                    <a class="forgot-password" href="{% url 'password_reset' %}">Forgot Password?</a>
+                </div>
+                <input type="password" name="password" required>
+            </div>
+
+
+            <!-- 使用 Flex 布局水平排列用户角色选项 -->
+            <div class="role-options">
+                <input type="radio" id="doctor" name="role" value="doctor" required>
+                <label for="doctor">Doctor</label>
+
+                <input type="radio" id="patient" name="role" value="patient" required>
+                <label for="patient">Patient</label>
+            </div>
+
+            {% if messages %}
+                <script>
+                    // 使用 JavaScript 弹出框显示错误消息
+                    {% for message in messages %}
+                        alert("{{ message|escapejs }}");
+                    {% endfor %}
+                </script>
+            {% endif %}
+
+            <button type="submit">Sign in</button>
+        </form>
+    </div>
+</div>
+<style>
+    /* 上下布局和用户角色选项 */
+    .login-form {
+        display: flex;
+        flex-direction: column;
+        background-color: #fff; /* 设置背景色为白色 */
+        padding: 20px; /* 添加内边距 */
+        border-radius: 5px; /* 设置边框圆角 */
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 添加阴影效果 */
+        max-width: 400px; /* 设置最大宽度 */
+        width: 100%; /* 让宽度占满父容器 */
+        position: relative; /* 相对定位 */
+    }
+
+    .form-row {
+        display: flex;
+        flex-direction: column; /* 纵向排列 */
+        gap: 5px; /* 调整表单项之间的间隔 */
+        width: 100%; /* 让表单项占满宽度 */
+    }
+
+    .left-right-margin {
+        display: flex;
+        justify-content: space-between; /* 左右对齐 */
+        align-items: center;
+        gap: 5px;
+    }
+
+    .left-align, .right-align {
+        display: flex; /* 内部元素使用Flex布局 */
+    }
+
+    .left-align label {
+        margin-right: auto; /* 将label推到左侧 */
+    }
+
+    .right-align a {
+        margin-left: auto; /* 将超链接推到右侧 */
+    }
+
+    .form-row label {
+        width: auto; /* 自动宽度 */
+        margin-top: auto; /* 调整标签和输入框之间的垂直间隔 */
+        margin-right: auto;
+    }
+
+    .form-row a {
+        margin-top: auto; /* 调整标签和输入框之间的垂直间隔 */
+        margin-left: auto; /* 将超链接推到右侧，占据剩余空间 */
+        white-space: nowrap; /* 防止超链接换行 */
+    }
+
+    .form-row input {
+        width: 100%; /* 让输入框宽度占满容器 */
+    }
+
+    {#下列为调整角色位置的样式#}
+    .role-options {
+        display: flex;
+        gap: 10px; /* 调整选项之间的间隔 */
+        align-items: center; /* 垂直居中对齐 */
+        justify-content: center; /* 水平居中对齐 */
+    }
+
+    .role-options input {
+        width: 20px; /* 设置单选按钮的宽度 */
+        height: 20px; /* 设置单选按钮的高度 */
+    }
+
+    .role-options label {
+        margin-bottom: 0;
+    }
+
+
+    button {
+        border-radius: 10px; /* 可调整圆角的大小 */
+        padding: 10px 20px; /* 可调整按钮的内边距 */
+        background-color: #3498db; /* 按钮背景色 */
+        color: white; /* 按钮文本颜色 */
+        border: none; /* 去除按钮边框 */
+        cursor: pointer;
+    }
+
+    input {
+        border-radius: 10px; /* 可调整输入框的圆角大小 */
+        padding: 10px; /* 可调整输入框的内边距 */
+    }
+
+</style>
+
+</body>
+</html>

@@ -1,0 +1,107 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PulmoInsight</title>
+    <style>
+
+        body {
+            background-image: url("{% static 'sample.jpeg' %}");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-color: rgba(0, 0, 0, 0);
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        {#导航栏#}
+        nav {
+            background-color: #000;
+            padding: 10px;
+            text-align: center;
+            height: 50px;
+            position: relative;
+        }
+
+        {#小导航栏上内容的样式#}
+        nav a {
+            color: white;
+            text-decoration: none;
+
+            /* 调整水平位置 */
+            position: relative;
+            margin-right: 20px; /* 可根据需要调整右侧间距 */
+            top: -20px; /* 调整垂直位置，可以根据需要进行调整 */
+        }
+
+        /* 如果只有两个链接，您可以尝试使用 :last-child 伪类来选择最后一个链接并调整其样式 */
+        nav a:last-child {
+            margin-right: -1100px; /* 将最后一个链接的右侧间距设置为 0，使其不受 margin-right 影响 */
+            position: relative;
+            top: -20px; /* 调整垂直位置，可以根据需要进行调整 */
+        }
+
+        {#导航栏logo#}
+        nav img {
+            height: 55px; /* 根据需要设置 logo 的高度 */
+            position: relative;
+            right: 1100px; /* 调整右侧位置 */
+        }
+
+        nav label {
+            color: white;
+            text-decoration: none;
+            position: relative;
+            top: -20px; /* 调整垂直位置，可以根据需要进行调整 */
+            right: 1100px;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 800px;
+            min-height: 470px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: rgba(0, 51, 120, 0.9);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 1);
+        }
+
+        .feature {
+            color: white;
+            background-color: rgba(0, 51, 120, 0.5);
+            padding: 20px;
+            margin-bottom: -40px;
+        }
+
+    </style>
+</head>
+<body>
+
+<nav>
+    <img src="{% static 'logo.png' %}" alt="PulmoInsight Logo">
+    <label for="PulmoInsight">PulmoInsight</label>
+    <a href="{% url 'login' %}">Login</a>
+    <a href="{% url 'register' %}">Register</a>
+</nav>
+
+<div class="container">
+    <div class="feature">
+        <h2>System Features</h2>
+        <p>Our system provides accurate and fast pneumonia classification using advanced AI algorithms.</p>
+    </div>
+    <div class="feature">
+        <h2>How to Use</h2>
+        <p>Simply upload your medical pneumonia X-ray and get the classification results in seconds.</p>
+    </div>
+    <div class="feature">
+        <h2>Technical Support</h2>
+        <p>Contact us for any technical issues or inquiries about the system.</p>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!-- image_upload/templates/image_upload/show_image.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Show Image</title>
+    <style>
+        img {
+            max-width: 500px;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <h2>肺炎图像</h2>
+    {% if latest_image %}
+        <img src="{{ latest_image.image.url }}" alt="Latest Uploaded Image">
+
+          {% if inference_result %}
+            <h4>推理结果</h4>
+            <p id="inferenceResult">{{ inference_result }}</p>
+            <!-- 添加下面这行显示推理时间 -->
+               <h4>推理时间</h4>
+              <p id="inferenceTime">{{ inference_time|floatformat:2 }}ms</p>
+        {% endif %}
+    {% else %}
+        <p>No image uploaded yet.</p>
+    {% endif %}
+</body>
+</html>

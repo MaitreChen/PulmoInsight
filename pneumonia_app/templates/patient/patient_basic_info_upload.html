@@ -1,0 +1,147 @@
+{% extends 'patient/base.html' %}
+{% load static %}
+
+{% block title %}Patient Profile{% endblock %}
+
+{% block content %}
+    <div class="profile-section">
+        <form class="profile-form" method="post" action="{% url 'save_patient' %}">
+            {% csrf_token %}
+            <label for="name">Name:</label>
+            <input type="text" name="name" id="name" required value="{{ user.username }}">
+
+            <label for="gender">Gender:</label>
+            <select name="gender" id="gender" required>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+            </select>
+
+            <label for="age">Age:</label>
+            <input type="number" name="age" id="age" required>
+
+            <label for="marital_status">Marital Status:</label>
+            <select name="marital_status" id="marital_status" required>
+                <option value="single">Single</option>
+                <option value="married">Married</option>
+            </select>
+
+            <label for="occupation">Occupation:</label>
+            <select name="occupation" id="occupation" required>
+                <option value="" selected disabled></option>
+                <option value="doctor">Doctor</option>
+                <option value="nurse">Nurse</option>
+                <option value="teacher">Teacher</option>
+                <option value="engineer">Engineer</option>
+                <option value="student">Student</option>
+                <option value="business_owner">Business Owner</option>
+                <option value="IT_professional">IT Professional</option>
+                <option value="artist">Artist</option>
+                <option value="homemaker">Homemaker</option>
+                <option value="retired">Retired</option>
+                <option value="other">Other</option>
+            </select>
+
+            <label for="phone_number">Phone Number:</label>
+            <input type="tel" name="phone_number" id="phone_number">
+
+            <label for="address">Address:</label>
+            <textarea name="address" id="address" rows="4"
+                      placeholder="/* e.g. 321 East Road, Unit 567
+Xuanwu District
+Nanjing, Jiangsu 210000
+China */"></textarea>
+
+            {% if messages %}
+                <script>
+                    // 使用 JavaScript 弹出框显示错误消息
+                    alert("{{ messages|escapejs }}");
+                </script>
+            {% endif %}
+
+            <div class="button-group">
+                <button type="submit" onclick="savePatient()">Save</button>
+                <button type="button" class="cancel-button" onclick="cancelOperation()">Cancel</button>
+            </div>
+        </form>
+
+        <div id="saveMessage"></div>
+    </div>
+
+    <style>
+        .profile-section {
+            flex: 1;
+
+            padding: 20px;
+            border-radius: 5px;
+            margin: auto; /* 居中 */
+
+        }
+
+        .profile-form {
+            display: flex;
+            flex-direction: column;
+            max-width: 400px;
+            margin: auto; /* 居中 */
+        }
+
+        label {
+            margin-top: 10px;
+            color: #fff;
+        }
+
+
+        input, select, textarea {
+            margin-top: 5px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        .button-group {
+            display: flex;
+            margin: auto; /* 居中 */
+        }
+
+        button, .cancel-button {
+            background-color: rgba(46, 204, 113, 0.6);
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .cancel-button {
+            margin-left: 50px; /* 分散按钮，适当调整左边按钮的间距 */
+        }
+    </style>
+
+
+    <script src="{% static 'jquery-3.6.4.min.js' %}"></script>
+    <script>
+        $(document).ready(function () {
+            $('#patientForm').submit(function (e) {
+                e.preventDefault();
+
+                // 发送Ajax请求
+                $.ajax({
+                    type: 'POST',
+                    url: $(this).attr('action'),
+                    data: $(this).serialize(),
+                    success: function (response) {
+                        if (response.success) {
+                            // 更新前端页面内容
+                            $('#saveMessage').text(response.message);
+                        } else {
+                            $('#saveMessage').text('Failed to save profile. Please check the form.');
+                        }
+                    },
+                    error: function (response) {
+                        $('#saveMessage').text('Failed to save profile. Please check the form.');
+                    }
+                });
+            });
+        });
+    </script>
+
+{% endblock %}

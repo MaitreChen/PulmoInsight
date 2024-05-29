@@ -1,0 +1,109 @@
+<!-- analyze.html -->
+
+{% extends 'doctor/base.html' %}
+
+{% block title %}Analyze{% endblock %}
+
+{% block content %}
+    <div class="container">
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% if upload_success %}
+                <div>
+                    Image Name: <span id="image-name">{{ image_name }}</span>
+{#                    <button type="submit" id="submit1">Upload another</button>#}
+                </div>
+            {% else %}
+                <label for="fileUpload">Click here and upload X-ray Image File</label>
+                <input type="file" id="fileUpload" name="image" onchange="updateFileName()" style="display: none;">
+                <p id="fileStatus">No image uploaded yet.</p>
+                <button type="submit" id="submit1" style="display: none;">Analyse</button>
+            {% endif %}
+        </form>
+
+        <script>
+            // 显示选中的文件名
+            function updateFileName() {
+                var fileInput = document.getElementById('fileUpload');
+                var fileStatus = document.getElementById('fileStatus');
+                if (fileInput.files.length > 0) {
+                    var fileName = fileInput.files[0].name;
+                    fileStatus.textContent = 'File selected: ' + fileName;
+                    document.getElementById('submit1').style.display = 'block'; // 显示上传按钮
+                } else {
+                    fileStatus.textContent = 'No image uploaded yet.';
+                    document.getElementById('submit1').style.display = 'none'; // 隐藏上传按钮
+                }
+            }
+
+            // 触发文件选择对话框
+            document.getElementById('fileUpload').addEventListener('change', function () {
+                updateFileName();
+            });
+        </script>
+
+        <script>
+            // 这个脚本确保当用户选择文件时，更新label以显示文件名
+            document.getElementById('fileUpload').addEventListener('change', function () {
+                // 获取文件名
+                var fileName = this.value.replace(/^.*\\/, '');
+                // 更新label中的文件名
+                document.getElementById('fileUpload').nextElementSibling.textContent = 'Upload X-ray Image Successfully!';
+            });
+        </script>
+
+        {% if latest_image %}
+            <img src="{{ latest_image.image.url }}" alt="Latest Uploaded Image" class="image-resize">
+
+            {% if inference_result %}
+                <h2>Inference Result</h2>
+
+                <!-- Probability for "Normal" -->
+                <p>
+                    Probability for Normal: &nbsp{{ inference_probabilities.0.0.0|floatformat:2 }}
+                </p>
+
+                <!-- Probability for "Pneumonia" -->
+                <p>
+                    Probability for Pneumonia: &nbsp {{ inference_probabilities.0.0.1|floatformat:2 }}
+                </p>
+
+                <!-- Diagnose Result -->
+                <p id="inferenceResult">Diagnosed as: &nbsp {{ inference_result }}</p>
+
+                <!-- Processing Time -->
+                <p id="inferenceTime">Processing Time: &nbsp {{ inference_time|floatformat:2 }}&nbsp;ms</p>
+            {% endif %}
+        {% else %}
+
+        {% endif %}
+    </div>
+
+
+    <style>
+        .container {
+            color: white;
+        }
+
+        .image-resize {
+            width: 200px;
+            height: 200px;
+
+        }
+    </style>
+
+    <script>
+        // JavaScript部分
+        function submitForm() {
+            // 隐藏提交按钮
+            document.getElementById('submit1').style.display = 'none';
+            // 返回true以继续提交表单，或者返回false以取消表单提交
+            return true;
+        }
+    </script>
+
+
+
+
+{% endblock %}

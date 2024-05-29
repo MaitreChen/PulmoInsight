@@ -1,0 +1,147 @@
+<!-- records.html -->
+
+{% extends 'doctor/base.html' %}
+
+{% block title %}Records{% endblock %}
+
+{% block content %}
+    <body>
+    <div class="centered-form">
+        <form method="GET" action="{% url 'doctor_records' %}">
+            <label for="search_diagnosis_result">Search Diagnosis Result:</label>
+            <select name="search_diagnosis_result">
+                <option value="All" {% if request.GET.search_diagnosis_result == "All" %} selected {% endif %}>All
+                </option>
+                <option value="Normal" {% if request.GET.search_diagnosis_result == "Normal" %} selected {% endif %}>
+                    Normal
+                </option>
+                <option value="Pneumonia" {% if request.GET.search_diagnosis_result == "Pneumonia" %}
+                        selected {% endif %}>
+                    Pneumonia
+                </option>
+            </select>
+
+            <label for="search_diagnosis_status">Diagnosis Status:</label>
+            <select name="search_diagnosis_status">
+                <option value="None" {% if request.GET.search_diagnosis_status == "None" %} selected {% endif %}>All
+                </option>
+                <option value="Yes" {% if request.GET.search_diagnosis_status == "Yes" %} selected {% endif %}>Yes
+                </option>
+                <option value="No" {% if request.GET.search_diagnosis_status == "No" %} selected {% endif %}>No</option>
+            </select>
+
+            <label for="search_controversy_status">Controversy Status:</label>
+            <select name="search_controversy_status">
+                <option value="None" {% if request.GET.search_controversy_status == "None" %} selected {% endif %}>All
+                </option>
+                <option value="True" {% if request.GET.search_controversy_status == "True" %} selected {% endif %}>True
+                </option>
+                <option value="False" {% if request.GET.search_controversy_status == "False" %} selected {% endif %}>
+                    False
+                </option>
+            </select>
+
+            <button type="submit">Search</button>
+        </form>
+    </div>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Number</th>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Gender</th>
+            <th>Upload Time</th>
+            <th>Diagnosis Status</th>
+            <th>Diagnosis Result</th>
+            <th>Diagnosis Time</th>
+            <th>Diagnostician</th>
+            <th>Controversy Status</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for data in merged_data %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ data.patient.name }}</td>
+                <td>{{ data.patient.age }}</td>
+                <td>{{ data.patient.gender }}</td>
+                <td>{{ data.medical_record.upload_time|date:"Y-n-j H:i" }}</td>
+                <td> {{ data.diagnosis_status }}</td>
+                <td> {{ data.diagnosis_result }}</td>
+                <td>
+                    {% if data.diagnosis_time %}
+                        {{ data.diagnosis_time|date:"Y-n-j H:i" }}
+                    {% else %}
+                        None
+                    {% endif %}
+                </td>
+                <td> {{ data.diagnostician }}</td>
+                <td> {{ data.controversy_status }}</td>
+                <td>
+                    <a href="{% url 'diagnose_patient' patient_id=data.patient.id record_id=data.medical_record.id %}">Start
+                        Diagnosis</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    </body>
+
+
+    <style>
+        .centered-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        table {
+            border-collapse: collapse;
+            margin: auto;
+            width: 100%;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid rgba(128, 128, 128, 0.5); /* 灰色并且有透明度 */
+            font-weight: normal; /* 设置为 normal，即正常字体粗细 */
+        }
+
+        /* 奇数行背景颜色 */
+        tbody tr:nth-child(odd) {
+            background-color: #444; /* 奇数行背景颜色 */
+        }
+
+        /* 偶数行背景颜色 */
+        tbody tr:nth-child(even) {
+            background-color: #555; /* 偶数行背景颜色 */
+        }
+
+        /* 鼠标悬停时的背景颜色 */
+        tbody tr:hover {
+            background-color: #666; /* 悬停时的背景颜色 */
+        }
+
+        /* 字段值文字颜色 */
+        td {
+            color: rgba(255, 255, 255, 0.7); /* 字段值文字颜色 */
+            font-weight: lighter;
+        }
+
+    </style>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #fff; /* 文字颜色为纯白色 */
+        }
+
+    </style>
+
+{% endblock %}

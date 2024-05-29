@@ -1,0 +1,60 @@
+<!-- patient/patient_detailed_info.html -->
+
+{% extends 'patient/base.html' %}
+
+{% block title %}Detailed Info{% endblock %}
+
+{% block content %}
+    <body>
+    <h2>{{ patient.name }}'s Detailed Information</h2>
+
+    <h3>Basic Information:</h3>
+    <p>
+        Name:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ patient.name }}</p>
+    <p>
+        Gender:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ patient.gender }}</p>
+    <p>Age:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ patient.age }}</p>
+    <p>Marital Status:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ patient.marital_status }}</p>
+    <p>Occupation:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ patient.occupation }}</p>
+    <p>Phone Number: &nbsp;&nbsp;&nbsp;{{ patient.phone_number }}</p>
+    <p>
+        Address:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ patient.address }}</p>
+
+    <br>
+    <h3>Medical Records:</h3>
+    {% for record in basic_records %}
+        <p>Image Name:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ record.get_patient_medical_image_name }}</p>
+        <p>Upload Time:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ record.upload_time |date:"Y-n-j H:i" }}</p>
+        <!-- 显示其他医疗记录信息 -->
+    {% endfor %}
+    <br>
+
+    <h3>Diagnosis Records:</h3>
+    {% if diagnosis_records %}
+        {% for record in diagnosis_records %}
+
+            <p>Diagnosis Status:
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ record.diagnosis_status }}</p>
+            <p>Diagnosis
+                Result:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ record.diagnosis_result }}</p>
+            <p>Detailed Diagnosis:&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;{{ record.detailed_diagnosis }}</p>
+            <p>Diagnosis Suggestion:&nbsp;&nbsp; {{ record.diagnosis_suggestion }}</p>
+            <p>Diagnosis Time:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;{{ record.diagnosis_time|date:"Y-n-j H:i" }}</p>
+            <p>
+                Diagnostician:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ record.diagnostician }}</p>
+            <!-- 显示其他诊断信息 -->
+
+        {% endfor %}
+    {% else %}
+        <p>undiagnosed</p>
+    {% endif %}
+
+    </body>
+
+    <style>
+        body {
+            color: white;
+        }
+    </style>
+{% endblock %}

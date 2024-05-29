@@ -1,0 +1,189 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PulmoInsight - Register</title>
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #333;
+        }
+
+        nav {
+            background-color: #000;
+            padding: 10px;
+            text-align: center;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        .register-container {
+            text-align: center;
+
+        }
+
+        .register-form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .register-form input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        .register-form button {
+            background-color: #3498db;
+            color: white;
+            padding: 10px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        /* 返回按钮样式 */
+        .back-button {
+            display: block;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e74c3c;
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        {#导航栏logo#}
+        nav img {
+            height: 100px; /* 根据需要设置 logo 的高度 */
+            margin-right: auto; /* 可调整 logo 与其他导航元素的间距 */
+            position: relative;
+        }
+
+        h2 {
+            color: white;
+            margin-top: auto;
+        }
+
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="{% url 'index' %}">
+        <img src="{% static 'logo.png' %}" alt="PulmoInsight Logo">
+    </a>
+</nav>
+
+<div class="container register-container">
+    <h2> Welcome to PulmoInsight!</h2>
+    <div class="register-form">
+        <!-- 你的注册表单代码 -->
+        <form method="post">
+            {% csrf_token %}
+
+            <!-- 使用 Flex 布局水平排列表单项 -->
+            <div class="form-row">
+                <label for="username">Username</label>
+                <input type="text" name="username" required>
+            </div>
+
+            <div class="form-row">
+                <label for="email">Mail</label>
+                <input type="email" name="email" required>
+            </div>
+
+            <div class="form-row">
+                <label for="password1">Password</label>
+                <input type="password" name="password1" required>
+            </div>
+
+            <div class="form-row">
+                <label for="password2">Enter password</label>
+                <input type="password" name="password2" required>
+            </div>
+
+            <div class="form-row">
+                <select name="identity" required>
+                    <option value="" disabled selected>Select Your Identity!</option>
+                    <option value="patient">Patient</option>
+                    <option value="doctor">Doctor</option>
+                </select>
+            </div>
+
+            {% if messages %}
+                <script>
+                    // 使用 JavaScript 弹出框显示错误消息
+                    alert("{{ messages|escapejs }}");
+                </script>
+            {% endif %}
+
+            <button type="submit">Summit</button>
+        </form>
+    </div>
+</div>
+<style>
+    /* 用于水平排列表单项 */
+    .register-form {
+        display: flex;
+        flex-direction: column;
+        background-color: #fff; /* 设置背景色为白色 */
+        padding: 20px; /* 添加内边距 */
+        border-radius: 5px; /* 设置边框圆角 */
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 添加阴影效果 */
+        max-width: 400px; /* 设置最大宽度 */
+        width: 100%; /* 让宽度占满父容器 */
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .form-row {
+        display: flex;
+        flex-direction: column; /* 纵向排列 */
+        gap: 5px; /* 调整表单项之间的间隔 */
+        width: 100%; /* 让表单项占满宽度 */
+    }
+
+    .form-row label {
+        white-space: nowrap; /* 防止标签换行 */
+        width: auto; /* 设置标签宽度，可根据实际情况调整 */
+        margin-right: auto;
+    }
+
+    .form-row input {
+        width: 100%; /* 让输入框宽度占满容器 */
+    }
+
+    button {
+        margin-top: 10px;
+        border-radius: 10px; /* 可调整圆角的大小 */
+        padding: 10px 20px; /* 可调整按钮的内边距 */
+        background-color: #3498db; /* 按钮背景色 */
+        color: white; /* 按钮文本颜色 */
+        border: none; /* 去除按钮边框 */
+        cursor: pointer;
+    }
+
+    input {
+        border-radius: 10px; /* 可调整输入框的圆角大小 */
+        padding: 10px; /* 可调整输入框的内边距 */
+    }
+
+</style>
+</body>
+</html>

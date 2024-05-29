@@ -1,0 +1,148 @@
+{% extends 'patient/base.html' %}
+
+{% block title %}Upload{% endblock %}
+
+{% block content %}
+    <body>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="upload-box">
+            <label for="fileInput" class="upload-label">Drop Pulmonary Image Here</label>
+            <input type="file" name='image' id="fileInput" style="display:none" onchange="fileSelected(this)">
+            <a href="#" class="upload-link" onclick="document.getElementById('fileInput').click()">Browse my
+                computer</a>
+        </div>
+
+        <div class="describe-box">
+            <label for="medical_history" class="label">Medical History:</label>
+            <textarea class="specific-textarea"
+                      name="medical_history" id="medical_history" rows="4"
+                      placeholder="/* Enter any medical history, especially those related to the pulmonary. If none, you can write 'None'. */"></textarea>
+
+            <label for="symptoms" class="label">Symptoms:</label>
+            <textarea class="specific-textarea"
+                      name="symptoms"
+                      id="symptoms" rows="4"
+                      placeholder="/* Please describe any symptoms you are experiencing, such as cough, shortness of breath, chest pain, etc. Be specific and include information about when the symptoms started. If none, you can write 'None'.*/"></textarea>
+
+            <label for="other" class="label">Other:</label>
+            <textarea class="specific-textarea"
+                      name="other" id="other" rows="4"
+                      placeholder="/* Enter any other history, such as allergy history, recent travel history, and so on. If none, you can write 'None'.*/"></textarea>
+        </div>
+
+        <button type="submit" class="submit-button" value="Submit">Submit</button>
+    </form>
+    </body>
+
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #fff; /* 文字颜色为纯白色 */
+        }
+
+
+        .upload-box {
+            border: 2px dashed #003366; /* 框框边界虚线 */
+            padding: 120px 180px;
+            position: relative;
+            left: -350px;
+            top: 130px;
+            background-color: #001f3f; /* 内部颜色，深蓝色 */
+            display: inline-block;
+        }
+
+        .upload-label {
+            font-size: 18px;
+            margin-bottom: 100px;
+            margin-top: 10px; /* 调整上边距 */
+        }
+
+        .upload-link {
+            color: #007bff; /* 超链接颜色 */
+            text-decoration: underline; /* 去除下划线 */
+            cursor: pointer;
+            display: block;
+            margin-top: 10px;
+        }
+
+        #selectedFileName {
+            display: block;
+            margin-top: 10px;
+            margin-right: 50px;
+            color: #007bff;
+            cursor: pointer;
+        }
+
+        .submit-button {
+            background-color: #2ecc71; /* 绿色按钮 */
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            margin-left: 600px;
+            margin-top: 10px;
+        }
+    </style>
+
+    <style>
+
+        .describe-box {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start; /* 控制子元素左对齐 */
+            margin-top: -200px;
+        }
+
+        .specific-textarea {
+            width: 30%;
+            box-sizing: border-box;
+            margin-left: 800px;
+            margin-bottom: 15px;
+        }
+
+
+        .label {
+            margin-left: 800px;
+            margin-bottom: 15px;
+        }
+
+
+        .submit-button {
+            margin-left: 565px;
+        }
+
+    </style>
+
+    <script>
+        function submitCombinedForm() {
+            var imageFile = document.getElementById('fileInput').files[0];
+            var medicalHistory = document.querySelector('textarea[name="medical_history"]').value;
+
+            if (imageFile && medicalHistory) {
+                document.querySelector('.combined-form').submit();
+            } else {
+                alert('Please fill in both image and medical history before submitting.');
+            }
+        }
+    </script>
+
+    <script>
+        function fileSelected(input) {
+            var fileInput = input.files[0];
+            var selectedFileName = document.getElementById('selectedFileName');
+
+            if (fileInput) {
+                selectedFileName.innerHTML = fileInput.name;
+            } else {
+                selectedFileName.innerHTML = '';
+            }
+        }
+    </script>
+
+
+{% endblock %}

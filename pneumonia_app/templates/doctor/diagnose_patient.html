@@ -1,0 +1,224 @@
+{% extends 'doctor/base.html' %}
+{% load static %}
+
+{% block title %}Records{% endblock %}
+
+{% block content %}
+
+    <!-- 左侧部分 - 病历信息 -->
+    <div class="medical-info">
+        <h2>Medical Records</h2>
+        <ul>
+            <img src="{{ current_medical_record.pulmonary_image.url }}" alt="Pulmonary Image"
+                 style="width: 100%; max-height: 250px; object-fit: contain;">
+
+            <!-- 显示自动化分析结果 -->
+            {% if context %}
+                <!-- Inference Result -->
+                <h3>Inference Result</h3>
+
+                <!-- Probability for "Normal" -->
+                <p>
+                    <span>Prob. for Normal:</span>{{ context.inference_probabilities.0.0.0|floatformat:2 }}
+                </p>
+
+                <!-- Probability for "Pneumonia" -->
+                <p>
+                    <span>Prob. for Pneumonia:</span> {{ context.inference_probabilities.0.0.1|floatformat:2 }}
+                </p>
+
+                <!-- Diagnose Result -->
+                <p id="inferenceResult"><span>Diagnosed Result:</span>{{ context.inference_result }}</p>
+
+            {% endif %}
+
+            <!-- 基本的病历信息 -->
+            <p><span>Medical History:</span> {{ current_medical_record.medical_history }}</p>
+            <p><span>Symptoms:</span> {{ current_medical_record.symptoms }}</p>
+            <p><span>Other:</span> {{ current_medical_record.other }}</p>
+        </ul>
+    </div>
+
+
+    <!-- 中间部分 - 基本信息 -->
+    <div class="basic-info">
+        <h3>Basic Information</h3>
+        <p><span>Name:</span> {{ patient.name }}</p>
+        <p><span>Age:</span> {{ patient.age }}</p>
+        <p><span>Gender:</span> {{ patient.gender }}</p>
+        <p><span>Marital Status:</span> {{ patient.marital_status }}</p>
+        <p><span>Occupation:</span> {{ patient.occupation }}</p>
+        <p><span>Phone Number:</span> {{ patient.phone_number }}</p>
+        <p><span>Address</span> {{ patient.address }}</p>
+    </div>
+
+
+    <!-- 右侧部分 - 诊断信息 -->
+    <div class="diagnosis-info">
+        <h3>Diagnosis Information</h3>
+        <form method="post"
+              action="{% url 'save_diagnosis' patient_id=patient.id record_id=current_medical_record.id %}">
+            {% csrf_token %}
+            <!-- 诊断结果：正常or肺炎 -->
+            <label for="diagnosis_result">Diagnosis Result:</label>
+            <select name="diagnosis_result">
+                <option value="" selected disabled>None</option>
+                <option value="Normal">Normal</option>
+                <option value="Pneumonia">Pneumonia</option>
+            </select><br>
+
+            <!-- 详细诊断信息 -->
+            <label for="detailed_diagnosis">Detailed Diagnosis:</label>
+            <textarea name="detailed_diagnosis"></textarea><br>
+
+            <!-- 诊断建议-->
+            <label for="diagnosis_suggestion">Diagnosis Suggestion:</label>
+            <textarea name="diagnosis_suggestion"></textarea><br>
+
+            <!-- 是否有争议 -->
+            <label>Controversy:</label>
+            <div class="controversy-options">
+                <label>
+                    <input type="radio" name="controversy" value="yes">
+                    <span class="circle"></span> Yes
+                </label>
+                <label>
+                    <input type="radio" name="controversy" value="no">
+                    <span class="circle"></span> No
+                </label>
+            </div>
+
+            <!-- 若有争议，理由是什么 -->
+            <label for="controversy_reason">Controversy Reason:</label>
+            <textarea name="controversy_reason"></textarea><br>
+
+            <button type="submit" class="btn btn-primary">Save Diagnosis</button>
+        </form>
+    </div>
+
+    <!-- 清除浮动 -->
+    <div class="clearfix"></div>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #fff; /* 文字颜色为白色 */
+        }
+
+
+        /* 左侧部分 - 病历信息 */
+        .medical-info {
+            float: left;
+            width: 40%; /* 设置宽度占比 */
+            padding: 20px;
+            box-sizing: border-box;
+            border-right: 1px solid #ccc; /* 左右加边框分隔开 */
+        }
+
+        .medical-info p {
+            color: #fff;
+            display: flex; /* 使用 Flex 布局 */
+            align-items: center; /* 垂直居中对齐 */
+            margin-bottom: 20px;
+        }
+
+
+        .medical-info p span {
+            font-weight: bold;
+            min-width: 270px; /* 设置最小宽度 */
+            display: inline-block; /* 将 span 设置为块级元素，以便垂直对齐 */
+            margin-right: 10px; /* 调整属性名之间的间距 */
+
+        }
+
+        .medical-info h2 {
+            font-weight: bold;
+            text-align: center;
+        }
+
+
+        .medical-info h3 {
+            font-weight: bold;
+        }
+
+
+        /* 中间部分 - 基本信息 */
+        .basic-info {
+            float: left;
+            width: 30%; /* 设置宽度占比 */
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* Basic Information 样式 */
+        .basic-info h3 {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .basic-info p {
+            color: #fff;
+            display: flex; /* 使用 Flex 布局 */
+            align-items: center; /* 垂直居中对齐 */
+            margin-bottom: 20px;
+        }
+
+        .basic-info p span {
+            font-weight: bold;
+            min-width: 160px; /* 设置最小宽度 */
+            display: inline-block; /* 将 span 设置为块级元素，以便垂直对齐 */
+            margin-right: 10px; /* 调整属性名之间的间距 */
+
+        }
+
+
+        {#/* 右侧部分 - 诊断信息 */#}
+        .diagnosis-info {
+            float: left;
+            width: 30%; /* 设置宽度占比 */
+            padding: 20px;
+            box-sizing: border-box;
+            border-left: 1px solid #ccc; /* 右侧加边框分隔开 */
+        }
+
+        .diagnosis-info h3 {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+
+        .diagnosis-info textarea {
+            resize: vertical; /* 允许用户垂直调整大小 */
+            margin-bottom: 10px; /* 添加一些间隔 */
+            width: 100%; /* 使文本框宽度填满其父容器 */
+            box-sizing: border-box; /* 确保宽度包括内边距和边框 */
+            height: 110px; /* 根据需要调整高度 */
+        }
+
+        .diagnosis-info label {
+            display: block; /* 使标签独占一行 */
+            margin-bottom: 5px; /* 为标签和文本框之间添加一些间隔 */
+            margin-left: 0; /* 重置左边距，确保左对齐 */
+            text-align: left; /* 确保文本左对齐 */
+        }
+
+        .diagnosis-info .controversy-options {
+            margin-left: 0; /* 重置左边距，确保左对齐 */
+        }
+
+.diagnosis-info button {
+    position: absolute;
+    top: 100%;
+    left: 87%;
+    transform: translate(-70%, -70%);
+}
+
+    </style>
+
+
+
+{% endblock %}
